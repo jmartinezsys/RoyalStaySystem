@@ -3,8 +3,10 @@
 > Sistema de gestion hotelera (PMS - Property Management System) cuyo objetivo es automatizar y organizar los procesos mas relevantes dentro de un hotel.
 
 ![Estado](https://img.shields.io/badge/Estado-En%20desarrollo-yellow)
+![Backend](https://img.shields.io/badge/Backend-Node.js-339933)
+![Framework](https://img.shields.io/badge/Framework-Express-lightgrey)
 ![Base de datos](https://img.shields.io/badge/Base%20de%20datos-MySQL%208-blue)
-![Modelado](https://img.shields.io/badge/Modelado-Normalizado-brightgreen)
+![Autenticacion](https://img.shields.io/badge/Autenticacion-JWT-black)
 
 ---
 
@@ -30,21 +32,21 @@
 
 ## Descripcion
 
-RoyalStaySystem es un sistema de gestion hotelera que integra la operacion completa de un establecimiento hotelero en una sola plataforma: recepcion, habitaciones, reservas, facturacion, mantenimiento, inventario y reportes.
+RoyalStaySystem es un sistema de gestion hotelera que integra la operacion completa de un establecimiento hotelero en una sola plataforma: clientes, habitaciones, reservas, facturacion, mantenimiento, inventario y reportes.
 
-El proyecto se concibe como un sistema completo que parte de un modelo de datos solido y normalizado (21 tablas relacionales) sobre el cual se construyen los modulos funcionales de la aplicacion. Cada modulo del esquema de base de datos se corresponde con un area operativa real del hotel, lo que garantiza que la informacion fluya de forma consistente entre todas las areas.
+El proyecto se concibe como un sistema completo que parte de un modelo de datos solido y normalizado (21 tablas relacionales) sobre el cual se construye una API REST con Node.js y Express. Cada modulo del esquema de base de datos se corresponde con un area operativa real del hotel, lo que garantiza que la informacion fluya de forma consistente entre todas las areas.
 
 El desarrollo se organiza en tres frentes:
 
-- **Aplicacion**: 14 modulos funcionales para la operacion diaria del hotel.
-- **Base de datos**: Modelo relacional normalizado que soporta todos los procesos.
-- **Documentacion**: Manual, diagramas y especificaciones del sistema.
+- **API REST**: Backend con Node.js y Express que expone la logica de negocio de los 14 modulos.
+- **Base de datos**: Modelo relacional normalizado en MySQL que soporta todos los procesos.
+- **Documentacion**: Manuales, diccionario de datos, modelo entidad-relacion y especificaciones tecnicas.
 
 ---
 
 ## Objetivos
 
-- Automatizar los procesos de recepcion, reservacion y facturacion del hotel.
+- Automatizar los procesos de reservacion, check-in, check-out y facturacion del hotel.
 - Gestionar de forma eficiente la disponibilidad de habitaciones y salones de eventos.
 - Mantener un control preciso del inventario y sus movimientos.
 - Centralizar el registro de clientes, empleados y accesos al sistema.
@@ -52,6 +54,7 @@ El desarrollo se organiza en tres frentes:
 - Administrar el mantenimiento preventivo y correctivo de las instalaciones.
 - Integrar los servicios adicionales (alimentos, transporte, spa, entre otros) a la facturacion.
 - Garantizar la integridad y consistencia de la informacion mediante un modelo de datos normalizado.
+- Proteger el acceso a la informacion con autenticacion basada en tokens JWT.
 
 ---
 
@@ -63,7 +66,6 @@ El desarrollo se organiza en tres frentes:
 | reservas | Reservacion de habitaciones y salones con control de estados |
 | habitaciones | Administracion de habitaciones, tipos, capacidad y disponibilidad |
 | salones | Gestion de salones para eventos, capacidad y disponibilidad |
-| recepcion | Operaciones de recepcion, check-in y check-out |
 | facturacion | Generacion de facturas, impuestos y metodos de pago |
 | servicios | Catalogo de servicios adicionales para huespedes |
 | inventario | Control de productos, stock y movimientos de entrada y salida |
@@ -79,13 +81,15 @@ El desarrollo se organiza en tres frentes:
 
 ## Caracteristicas Principales
 
+- API REST documentada para la integracion con el frontend.
+- Autenticacion y autorizacion mediante tokens JWT.
 - Reservacion de habitaciones y salones con gestion de fechas, estados y costos estimados.
 - Check-in y check-out vinculados a estadias y empleados responsables.
 - Facturacion con calculo automatico de subtotales, impuestos y totales.
 - Registro de consumos de servicios y productos asociados a cada reserva.
 - Control de inventario con actualizacion automatica de stock mediante disparadores (triggers).
 - Sistema de mantenimiento con tipos, prioridades y seguimiento de estado.
-- Autenticacion de usuarios con credenciales cifradas.
+- Credenciales cifradas para los usuarios del sistema.
 - Modelo de datos con restricciones de integridad referencial y columnas calculadas.
 
 ---
@@ -94,11 +98,11 @@ El desarrollo se organiza en tres frentes:
 
 | Capa | Tecnologia |
 |------|------------|
+| Backend | Node.js |
+| Framework | Express |
 | Base de datos | MySQL 8.0+ |
+| Autenticacion | JWT (JSON Web Tokens) |
 | Modelado de datos | Diagrama entidad-relacion y normalizacion |
-| Lenguaje de programacion | Pendiente de definir |
-| Framework | Pendiente de definir |
-| Frontend | Pendiente de definir |
 | Control de versiones | Git y GitHub |
 
 ---
@@ -108,34 +112,44 @@ El desarrollo se organiza en tres frentes:
 ```
 RoyalStaySystem/
 ├── src/
-│   ├── auditoria/          # Modulo de auditoria
-│   ├── clientes/           # Gestion de clientes
-│   ├── compartido/         # Utilidades compartidas
-│   ├── configuracion/      # Parametrizacion del sistema
-│   ├── facturacion/        # Modulo de facturacion
-│   ├── habitaciones/       # Gestion de habitaciones
-│   ├── inventario/         # Control de inventario
-│   ├── mantenimiento/      # Solicitudes de mantenimiento
-│   ├── personal/           # Administracion de personal
-│   ├── reportes/           # Reportes y estadisticas
-│   ├── reservas/           # Sistema de reservas
-│   ├── salones/            # Gestion de salones
-│   ├── seguridad/          # Autenticacion y accesos
-│   └── servicios/          # Catalogo de servicios
+│   ├── clientes/          # Gestion de clientes
+│   │   ├── routes/        # Definicion de rutas API
+│   │   ├── controllers/   # Controladores
+│   │   ├── models/        # Modelos de datos
+│   │   └── services/      # Logica de negocio
+│   ├── personal/          # Empleados, cargos y usuarios
+│   ├── seguridad/         # Autenticacion y autorizacion
+│   ├── habitaciones/      # Habitaciones del hotel
+│   ├── salones/           # Salones para eventos y conferencias
+│   ├── reservas/          # Reservas, check-in y check-out
+│   ├── servicios/         # Servicios hoteleros y consumos
+│   ├── inventario/        # Inventario de productos y movimientos
+│   ├── mantenimiento/     # Mantenimiento de instalaciones
+│   ├── facturacion/       # Facturacion y pagos
+│   ├── reportes/          # Generacion de reportes
+│   ├── auditoria/         # Registro de auditoria
+│   ├── configuracion/     # Configuracion del sistema
+│   └── compartido/        # Utilidades compartidas
+├── config/                # Configuracion de la base de datos
 ├── database/
-│   ├── scripts/            # Scripts SQL del esquema
-│   ├── migrations/         # Migraciones estructura
-│   ├── seeds/              # Datos semilla de prueba
-│   └── backups/            # Respaldo de datos
-├── docs/
-│   ├── api/                # Documentacion de la API
-│   ├── er/                 # Diagramas entidad-relacion
-│   ├── manual/             # Manual de usuario
-│   └── planificacion/      # Documentos de planificacion
+│   ├── scripts/           # Scripts SQL del esquema
+│   ├── migrations/        # Migraciones de estructura
+│   ├── seeds/             # Datos semilla de prueba
+│   └── backups/           # Respaldos de datos
+├── middleware/            # Middleware de Express
+├── routes/                # Rutas globales de la API
+├── docs/                  # Documentacion del proyecto
+│   ├── api/               # Documentacion de la API
+│   ├── er/                # Modelo entidad-relacion y diccionario
+│   ├── manual/            # Manual de instalacion y de usuario
+│   └── planificacion/     # Alcance y hoja de ruta
 ├── tests/
-│   ├── unit/               # Pruebas unitarias
-│   ├── integration/        # Pruebas de integracion
-│   └── e2e/                # Pruebas de extremo a extremo
+│   ├── unit/              # Pruebas unitarias
+│   ├── integration/       # Pruebas de integracion
+│   └── e2e/               # Pruebas de extremo a extremo
+├── package.json
+├── server.js              # Punto de entrada del servidor
+├── app.js                 # Configuracion de la aplicacion Express
 └── README.md
 ```
 
@@ -143,7 +157,7 @@ RoyalStaySystem/
 
 ## Base de Datos
 
-La base de datos es el cimiento del sistema. Esta diseñada a partir de un modelo entidad-relacion normalizado y contiene 21 tablas organizadas en cinco areas.
+La base de datos es el cimiento del sistema. Esta disenada a partir de un modelo entidad-relacion normalizado y contiene 21 tablas organizadas en cinco areas.
 
 - **Base de datos**: `bd_hotel_system_pms`
 - **Motor**: MySQL 8.0+
@@ -166,15 +180,18 @@ La base de datos es el cimiento del sistema. Esta diseñada a partir de un model
 - **Disparador `tg_actualizar_stock`**: actualiza automaticamente el stock del inventario al registrar movimientos de entrada o salida.
 - **Columnas calculadas**: campos generados automaticamente (`GENERATED ALWAYS AS ... STORED`) como subtotales, totales y tiempos de uso.
 - **Restricciones de integridad**: claves foraneas y check constraints que validan estados y reglas de negocio.
-- **Relaciones opcionales**: consumos pueden referenciar servicios o productos; el mantenimiento puede aplicarse a habitaciones o salones.
+- **Relaciones opcionales**: los consumos pueden referenciar servicios o productos; el mantenimiento puede aplicarse a habitaciones o salones.
+
+Para el detalle completo de las tablas consultar el [Diccionario de Datos](docs/er/diccionario-datos.md).
 
 ---
 
 ## Requisitos Previos
 
+- Node.js 18 o superior.
 - MySQL 8.0 o superior.
 - Git para el control de versiones.
-- Entorno de ejecucion segun el stack de desarrollo definido.
+- npm (incluido con Node.js).
 
 ---
 
@@ -187,7 +204,21 @@ git clone https://github.com/jmartinezsys/RoyalStaySystem.git
 cd RoyalStaySystem
 ```
 
-### 2. Crear la base de datos
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Configurar las variables de entorno
+
+Copiar el archivo `.env.example` a `.env` y completar los valores de conexion a la base de datos:
+
+```bash
+cp .env.example .env
+```
+
+### 4. Crear la base de datos
 
 Ejecutar el script del esquema para crear la base de datos, las tablas y las restricciones:
 
@@ -195,7 +226,7 @@ Ejecutar el script del esquema para crear la base de datos, las tablas y las res
 mysql -u <usuario> -p < database/scripts/database.sql
 ```
 
-### 3. Cargar los datos de prueba
+### 5. Cargar los datos de prueba
 
 Ejecutar el script de datos semilla para poblar la base de datos con informacion de ejemplo:
 
@@ -203,19 +234,19 @@ Ejecutar el script de datos semilla para poblar la base de datos con informacion
 mysql -u <usuario> -p < database/seeds/
 ```
 
-### 4. Configurar el entorno
+### 6. Iniciar el servidor
 
-Crear el archivo de configuracion de acuerdo con el entorno de desarrollo y establecer los parametros de conexion a la base de datos.
+```bash
+npm run dev
+```
 
-### 5. Ejecutar la aplicacion
-
-Iniciar la aplicacion siguiendo las instrucciones del manual de instalacion en `docs/manual/`.
+Para una guia detallada de instalacion consultar la [Guia de Instalacion](docs/manual/guia-instalacion.md).
 
 ---
 
 ## Uso
 
-La plataforma esta pensada para los distintos roles que operan en un hotel:
+La API expone los recursos del sistema para ser consumidos por el frontend. Los roles que operan en un hotel tienen flujos asociados:
 
 - **Recepcion**: registra clientes, gestiona reservas y realiza check-in y check-out.
 - **Facturacion**: genera facturas sobre los consumos y reservas de cada cliente.
@@ -223,24 +254,26 @@ La plataforma esta pensada para los distintos roles que operan en un hotel:
 - **Inventario**: registra productos y controla entradas y salidas del stock.
 - **Gerencia**: consulta reportes y estadisticas del negocio.
 
+La documentacion de los endpoints se encuentra en [Documentacion de la API](docs/api/documentacion-api.md). El detalle de los flujos de usuario se encuentra en el [Manual de Usuario](docs/manual/manual-usuario.md).
+
 ---
 
 ## Documentacion
 
-La documentacion del proyecto se encuentra en la carpeta `docs/`:
+La documentacion completa del proyecto se encuentra en `docs/`, con un indice general en [docs/README.md](docs/README.md).
 
 | Carpeta | Contenido |
 |---------|-----------|
 | `docs/api` | Documentacion tecnica de la API y endpoints |
-| `docs/er` | Diagramas entidad-relacion (conceptual y fisico) |
-| `docs/manual` | Manual de usuario e instalacion |
-| `docs/planificacion` | Planificacion y alcance del proyecto |
+| `docs/er` | Modelo entidad-relacion y diccionario de datos |
+| `docs/manual` | Guia de instalacion y manual de usuario |
+| `docs/planificacion` | Alcance del proyecto y hoja de ruta |
 
 ---
 
 ## Roadmap
 
-- [ ] Definir el stack tecnologico de la aplicacion.
+- [x] Definir el stack tecnologico (Node.js, Express, MySQL, JWT).
 - [ ] Implementar la capa de acceso a datos.
 - [ ] Desarrollar los modulos funcionales priorizados.
 - [ ] Construir el modulo de autenticacion y control de acceso.
